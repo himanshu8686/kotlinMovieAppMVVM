@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- secondary colors -->
+    <color name="red_200">#fc5c65</color>
+    <color name="red_700">#eb3b5a</color>
+
+    <!-- night theme color-->
+    <color name="silver">#bdc3c7</color>
+    <color name="cloud_white">#ecf0f1</color>
+
+    <!-- day theme color-->
+    <color name="wet_blue">#34495e</color>
+    <color name="midnight_blue">#2c3e50</color>
+
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="light_inactive_track">#7f8c8d</color>
+
+</resources>
