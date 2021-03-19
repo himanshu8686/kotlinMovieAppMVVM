@@ -4,15 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kotlinmovieappmvvm.R
 import com.kotlinmovieappmvvm.models.PopularMovieResponse
-import kotlinx.android.synthetic.main.movie_list_item.view.*
+import com.kotlinmovieappmvvm.utils.toast
 
 /**
  * Project Name :KotlinMovieAppMVVM
@@ -42,6 +42,12 @@ class MovieAdapter(
         val movieRating: Float = popularMoviesList[position].voteAverage / 3
 
         holder.setMovieData(imageString, movieTitle, movieReleaseDate, movieLanguage, movieRating)
+
+        holder.setClickOnDetailsButton(position,popularMoviesList,onMovieItemClickListener)
+        //get listener callback on Homefragment
+//        holder.recyclerviewMovieBinding.layoutLike.setOnClickListener {
+//            listener.onItemClick(holder.recyclerviewMovieBinding.layoutLike,movies[position])
+//        }
     }
 
     override fun getItemCount(): Int {
@@ -58,6 +64,7 @@ class MovieAdapter(
         var movie_release_date: TextView = itemView.findViewById(R.id.movie_release_date)
         var movie_language: TextView = itemView.findViewById(R.id.movie_language)
         var rating_bar: RatingBar = itemView.findViewById(R.id.rating_bar)
+        var btn_details:Button = itemView.findViewById(R.id.btn_details)
 
         fun setMovieData(
             imageString: String,
@@ -78,5 +85,10 @@ class MovieAdapter(
             rating_bar.rating = movieRating
         }
 
+        fun setClickOnDetailsButton(position: Int, popularMoviesList: List<PopularMovieResponse.PopularMovieItem>, onMovieItemClickListener: OnMovieItemClickListener) {
+            btn_details.setOnClickListener {
+                onMovieItemClickListener.onDetailsButtonClick(it,popularMoviesList[position])
+            }
+        }
     }
 }

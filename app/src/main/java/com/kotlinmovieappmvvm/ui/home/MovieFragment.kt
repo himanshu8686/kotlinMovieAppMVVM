@@ -1,5 +1,6 @@
 package com.kotlinmovieappmvvm.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,22 +8,27 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.kotlinmovieappmvvm.MovieDetailsActivity
 import com.kotlinmovieappmvvm.R
+import com.kotlinmovieappmvvm.models.PopularMovieResponse
 import com.kotlinmovieappmvvm.network.MovieApi
 import com.kotlinmovieappmvvm.repositories.MovieRepository
-import kotlinx.android.synthetic.main.fragment_movie.*
 
 class MovieFragment : Fragment(), OnMovieItemClickListener {
 
     private lateinit var movieViewModel: MovieViewModel
     private lateinit var movieViewModelFactory: MovieViewModelFactory
+    private lateinit var movies_recycler_view:RecyclerView
+    private lateinit var viewOfLayout: View
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       return inflater.inflate(R.layout.fragment_movie, container, false)
+       viewOfLayout= inflater!!.inflate(R.layout.fragment_movie, container, false)
+        return viewOfLayout
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -34,6 +40,8 @@ class MovieFragment : Fragment(), OnMovieItemClickListener {
         movieViewModel = ViewModelProvider(this,movieViewModelFactory).get(MovieViewModel::class.java)
         movieViewModel.setPopularMovieListToLiveData()
 
+        movies_recycler_view = viewOfLayout.findViewById(R.id.movies_recycler_view)
+
         movieViewModel.getPopularMovies.observe(viewLifecycleOwner,{
                 movies ->
             movies_recycler_view.also {
@@ -42,19 +50,16 @@ class MovieFragment : Fragment(), OnMovieItemClickListener {
                 it.adapter = MovieAdapter(requireContext(),movies,this)
             }
         })
+    }
 
-        /********* Testing *********/
-//        val networkConnectionInterceptor = NetworkConnectionInterceptor(requireActivity())
-//        val movieApi = MovieApi(networkConnectionInterceptor)
-//        val movieRepository = MovieRepository()
-//
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            //fetchMovies(movieApi)
-//            val mutablelist: LiveData<List<PopularMovieResponse.PopularMovieItem>> =
-//                movieRepository.getPopularMovies()
-//            Log.d("TAG", "" + mutablelist.value?.get(0))
-//
-//        }
+    override fun onDetailsButtonClick(view: View, movie: PopularMovieResponse.PopularMovieItem) {
+        when(view.id){
+            R.id.btn_details -> {
+                val intent = Intent(context?.applicationContext,MovieDetailsActivity::class.java)
+
+                intent.putExtra("DETAILS",movie)
+                startActivity(intent)
+            }
+        }
     }
 }
