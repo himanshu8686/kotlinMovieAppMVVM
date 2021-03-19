@@ -2,8 +2,8 @@ package com.kotlinmovieappmvvm
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -41,9 +41,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var searchToolbar: Toolbar
     private lateinit var item_search: MenuItem
 
+    companion object{
+        var app_context: Context? = null
+            set(value) {
+                field = value?.applicationContext
+            }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        app_context = applicationContext
+
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
@@ -238,7 +248,12 @@ class MainActivity : AppCompatActivity() {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private fun circleReveal(viewID: Int, posFromRight: Int, containsOverflow: Boolean, isShow: Boolean) {
+    private fun circleReveal(
+        viewID: Int,
+        posFromRight: Int,
+        containsOverflow: Boolean,
+        isShow: Boolean
+    ) {
         val myView: View = findViewById(viewID)
         var width: Int = myView.getWidth()
         if (posFromRight > 0) width -= posFromRight * resources.getDimensionPixelSize(R.dimen.abc_action_button_min_width_material) - resources.getDimensionPixelSize(
