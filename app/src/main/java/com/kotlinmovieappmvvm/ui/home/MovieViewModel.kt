@@ -25,6 +25,7 @@ class MovieViewModel(
         }
 
     fun setPopularMovieListToLiveData(){
+
         job = Coroutines.ioThenMain(
             {movieRepository.getPopularMovies()},
             {

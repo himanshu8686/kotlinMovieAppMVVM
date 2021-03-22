@@ -122,6 +122,7 @@ class MainActivity : AppCompatActivity() {
                     searchToolbar.visibility = View.VISIBLE
 
                 item_search.expandActionView()
+                return true
             }
         }
         return super.onOptionsItemSelected(item)
@@ -154,8 +155,9 @@ class MainActivity : AppCompatActivity() {
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         circleReveal(R.id.search_toolbar, 1, true, false)
-                    else
+                    else{
                         searchToolbar.visibility = View.GONE
+                    }
 
                     return true
                 }
@@ -218,7 +220,7 @@ class MainActivity : AppCompatActivity() {
             searchMenu.findItem(R.id.search_filter).actionView as SearchView
 
         // Enable / Disable submit button in the Keyboard
-        searchView.isSubmitButtonEnabled = false;
+        searchView.isSubmitButtonEnabled = false
 
         //set Hint and Text color
         var txtSearch: EditText = searchView.findViewById(R.id.search_src_text) as EditText
@@ -236,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                 return true
             }
 
-            public fun callSearch(query: String) {
+            fun callSearch(query: String) {
                 //Do searching
                 Log.i("TAG", "" + query)
             }
@@ -255,13 +257,13 @@ class MainActivity : AppCompatActivity() {
         isShow: Boolean
     ) {
         val myView: View = findViewById(viewID)
-        var width: Int = myView.getWidth()
+        var width: Int = myView.width
         if (posFromRight > 0) width -= posFromRight * resources.getDimensionPixelSize(R.dimen.abc_action_button_min_width_material) - resources.getDimensionPixelSize(
             R.dimen.abc_action_button_min_width_material
         ) / 2
         if (containsOverflow) width -= resources.getDimensionPixelSize(R.dimen.abc_action_button_min_width_overflow_material)
         val cx = width
-        val cy: Int = myView.getHeight() / 2
+        val cy: Int = myView.height / 2
         val anim: Animator
         anim =
             if (isShow) ViewAnimationUtils.createCircularReveal(
@@ -274,20 +276,20 @@ class MainActivity : AppCompatActivity() {
                 myView, cx, cy,
                 width.toFloat(), 0f
             )
-        anim.duration = 220.toLong()
+        anim.duration = 520.toLong()
 
         // make the view invisible when the animation is done
         anim.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 if (!isShow) {
                     super.onAnimationEnd(animation)
-                    myView.setVisibility(View.INVISIBLE)
+                    myView.visibility = View.INVISIBLE
                 }
             }
         })
 
         // make the view visible and start the animation
-        if (isShow) myView.setVisibility(View.VISIBLE)
+        if (isShow) myView.visibility = View.VISIBLE
 
         // start the animation
         anim.start()

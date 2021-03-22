@@ -14,6 +14,8 @@ import com.kotlinmovieappmvvm.R
 import com.kotlinmovieappmvvm.models.PopularMovieResponse
 import com.kotlinmovieappmvvm.network.MovieApi
 import com.kotlinmovieappmvvm.repositories.MovieRepository
+import com.kotlinmovieappmvvm.utils.Constants
+import com.kotlinmovieappmvvm.utils.toast
 
 class MovieFragment : Fragment(), OnMovieItemClickListener {
 
@@ -38,18 +40,26 @@ class MovieFragment : Fragment(), OnMovieItemClickListener {
 
         movieViewModelFactory = MovieViewModelFactory(moviesRepository)
         movieViewModel = ViewModelProvider(this,movieViewModelFactory).get(MovieViewModel::class.java)
-        movieViewModel.setPopularMovieListToLiveData()
 
         movies_recycler_view = viewOfLayout.findViewById(R.id.movies_recycler_view)
 
-        movieViewModel.getPopularMovies.observe(viewLifecycleOwner,{
-                movies ->
-            movies_recycler_view.also {
-                it.layoutManager= LinearLayoutManager(requireContext())
-                it.setHasFixedSize(true)
-                it.adapter = MovieAdapter(requireContext(),movies,this)
-            }
-        })
+        if (Constants.isInternetAvailable(requireActivity())){
+            movieViewModel.setPopularMovieListToLiveData()
+            // set the data & observe the data
+            requireActivity().toast("internet available")
+            movieViewModel.getPopularMovies.observe(viewLifecycleOwner, { movies ->
+                movies_recycler_view.also {
+                    it.layoutManager = LinearLayoutManager(requireContext())
+                    it.setHasFixedSize(true)
+                    it.adapter = MovieAdapter(requireContext(), movies, this)
+                }
+            })
+        }else{
+            //display toast
+            requireActivity().toast("No internet")
+        }
+
+
     }
 
     override fun onDetailsButtonClick(view: View, movie: PopularMovieResponse.PopularMovieItem) {

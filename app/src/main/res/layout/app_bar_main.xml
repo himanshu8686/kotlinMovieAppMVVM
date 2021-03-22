@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,11 +8,21 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <include layout="@layout/main_toolbar" />
+    <RelativeLayout
+        android:id="@+id/tool_view"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <include layout="@layout/main_toolbar" />
 
-    <include layout = "@layout/search_toolbar"
-        android:visibility="gone"/>
+        <include layout ="@layout/search_toolbar"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
-    <include layout="@layout/content_main" />
 
-</LinearLayout>
+    <include layout="@layout/content_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tool_view"
+        />
+
+</RelativeLayout>
