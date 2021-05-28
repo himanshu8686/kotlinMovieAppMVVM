@@ -1,6 +1,7 @@
 package com.kotlinmovieappmvvm.ui.home
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,8 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.facebook.shimmer.Shimmer
+import com.facebook.shimmer.ShimmerDrawable
 import com.kotlinmovieappmvvm.R
 import com.kotlinmovieappmvvm.models.PopularMovieResponse
 import com.kotlinmovieappmvvm.utils.toast
@@ -41,13 +44,32 @@ class MovieAdapter(
         val movieLanguage: String = popularMoviesList[position].originalLanguage
         val movieRating: Float = popularMoviesList[position].voteAverage / 3
 
-        holder.setMovieData(imageString, movieTitle, movieReleaseDate, movieLanguage, movieRating)
-
-        holder.setClickOnDetailsButton(position,popularMoviesList,onMovieItemClickListener)
+        holder.setClickOnDetailsButton(position, popularMoviesList, onMovieItemClickListener)
         //get listener callback on Homefragment
 //        holder.recyclerviewMovieBinding.layoutLike.setOnClickListener {
 //            listener.onItemClick(holder.recyclerviewMovieBinding.layoutLike,movies[position])
 //        }
+
+        val shimmer = Shimmer.ColorHighlightBuilder()
+            .setBaseColor(Color.parseColor("#f3f3f3"))
+            .setBaseAlpha(1.0f)
+            .setHighlightColor(Color.parseColor("#e7e7e7"))
+            .setHighlightAlpha(1.0f)
+            .setDropoff(50.0f)
+            .build()
+
+        // initialiize shimmer drawable
+        val shimmerDrawable = ShimmerDrawable()
+        // set shimmer
+        shimmerDrawable.setShimmer(shimmer)
+
+        // set image on iamge view
+        Glide.with(holder.itemView.context).load("https://image.tmdb.org/t/p/w500/" + imageString)
+            .placeholder(shimmerDrawable)
+            .into(holder.movie_img)
+
+        holder.setMovieData(imageString, movieTitle, movieReleaseDate, movieLanguage, movieRating)
+
     }
 
     override fun getItemCount(): Int {
@@ -64,7 +86,7 @@ class MovieAdapter(
         var movie_release_date: TextView = itemView.findViewById(R.id.movie_release_date)
         var movie_language: TextView = itemView.findViewById(R.id.movie_language)
         var rating_bar: RatingBar = itemView.findViewById(R.id.rating_bar)
-        var btn_details:Button = itemView.findViewById(R.id.btn_details)
+        var btn_details: Button = itemView.findViewById(R.id.btn_details)
 
         fun setMovieData(
             imageString: String,
@@ -74,9 +96,7 @@ class MovieAdapter(
             movieRating: Float
         ) {
 
-            Glide.with(itemView.context).load("https://image.tmdb.org/t/p/w500/" + imageString)
-                .placeholder(R.drawable.spinner)
-                .into(movie_img)
+
             //Glide.with(itemView.context).load(R.drawable.spinner).into(movie_img)
 
             movie_title.text = movieTitle
@@ -85,9 +105,13 @@ class MovieAdapter(
             rating_bar.rating = movieRating
         }
 
-        fun setClickOnDetailsButton(position: Int, popularMoviesList: List<PopularMovieResponse.PopularMovieItem>, onMovieItemClickListener: OnMovieItemClickListener) {
+        fun setClickOnDetailsButton(
+            position: Int,
+            popularMoviesList: List<PopularMovieResponse.PopularMovieItem>,
+            onMovieItemClickListener: OnMovieItemClickListener
+        ) {
             btn_details.setOnClickListener {
-                onMovieItemClickListener.onDetailsButtonClick(it,popularMoviesList[position])
+                onMovieItemClickListener.onDetailsButtonClick(it, popularMoviesList[position])
             }
         }
     }
